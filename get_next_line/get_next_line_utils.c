@@ -27,45 +27,52 @@ char    *ft_strchr(const char *s, int c)
     return (0);
 }
 
-static size_t   adjust_len(const char *s1, const char *s2)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-    size_t  len1;
-    size_t  len2;
+	size_t				i;
+	unsigned char		*d;
+	const unsigned char	*s;
 
-    if (s1)
-    {
-        len1 = ft_strlen(s1);
-    }
-    if (s2)
-    {
-        len2 = ft_strlen(s2);
-    }
-    return (len1 + len2);
+	d = (unsigned char *)dest;
+	s = (const unsigned char *)src;
+	if (d == s || n == 0)
+	{
+		return (dest);
+	}
+	i = 0;
+	if (d != s)
+	{
+		while (i < n)
+		{
+			d[i] = s[i];
+			i++;
+		}
+	}
+	return (dest);
+}
+
+static size_t   safety_strlen(const char *s)
+{
+    if (!s)
+        return (0);
+    return (ft_strlen(s));
 }
 
 char *ft_strjoin(const char *s1, const char *s2)
 {
     char *result;
-    size_t  len;
-    size_t  i;
-    size_t  j;
+    size_t  len1;
+    size_t  len2;
 
-    len = adjust_len(s1, s2);
-    result = (char *)malloc(len + 1);
-    if (result == NULL)
+    len1 = safety_strlen(s1);
+    len2 = safety_strlen(s2);
+    result = malloc(len1 + len2 + 1);
+    if (!result)
         return (NULL);
-    i = 0;
-    j = 0;
-    while (s1[i])
-    {
-        result[i] = s1[i];
-        i++;
-    }
-    while (s2[j])
-    {
-        result[i + j] = s2[j];
-        j++;
-    }
-    result[len] = '\0';
+    if (s1)
+        ft_memcpy(result, s1, len1);
+    if (s2)
+        ft_memcpy(result + len1 , s2, len2);
+    result[len1 + len2] = '\0';
     return (result);
 }
